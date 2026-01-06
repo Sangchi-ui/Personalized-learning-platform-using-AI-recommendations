@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Domain - VibeLearn Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Void-black background with volumetric lighting */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 200, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(100, 50, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 0%, rgba(0, 150, 255, 0.05) 0%, transparent 60%),
+                #0a0a0f;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Noise texture overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='1' /%3E%3C/filter%3E%3Crect width='400' height='400' fill='%23000' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 40px 60px;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 56px;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .header p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #00ffc8;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .header .subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Domains Grid */
+        .domains-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin-bottom: 60px;
+        }
+
+        .domain-btn {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 200, 0.15);
+            border-radius: 14px;
+            padding: 24px 20px;
+            cursor: pointer;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .domain-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.1) 0%, rgba(100, 50, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 300ms ease;
+        }
+
+        .domain-btn:hover {
+            border-color: rgba(0, 255, 200, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-8px);
+            box-shadow: 
+                0 15px 40px rgba(0, 255, 200, 0.15),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .domain-btn:hover::before {
+            opacity: 1;
+        }
+
+        .domain-btn-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            position: relative;
+            z-index: 2;
+            transition: color 300ms ease;
+        }
+
+        .domain-btn:hover .domain-btn-text {
+            color: #00ffc8;
+        }
+
+        .domain-btn-icon {
+            font-size: 24px;
+            margin-top: 12px;
+            position: relative;
+            z-index: 2;
+            opacity: 0.7;
+            transition: opacity 300ms ease;
+        }
+
+        .domain-btn:hover .domain-btn-icon {
+            opacity: 1;
+        }
+
+        /* Badge for "New" */
+        .badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(100, 50, 255, 0.6);
+            color: #00ffc8;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 3;
+        }
+
+        /* Custom Domain Button */
+        .create-custom-btn {
+            background: rgba(0, 255, 200, 0.08);
+            border: 2px dashed rgba(0, 255, 200, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            color: rgba(0, 255, 200, 0.7);
+            transition: all 300ms ease;
+        }
+
+        .create-custom-btn:hover {
+            border-color: rgba(0, 255, 200, 0.6);
+            background: rgba(0, 255, 200, 0.12);
+            color: #00ffc8;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 255, 200, 0.1);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .footer p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00ffc8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 300ms ease;
+        }
+
+        .back-link:hover {
+            color: #ffffff;
+            gap: 8px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .domains-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 40px;
+            }
+
+            .domains-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .container {
+                padding: 60px 24px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="coures.html" class="back-link">← Back</a>
+            <p>SELECT YOUR PATH</p>
+            <h1>Choose Your Domain</h1>
+            <div class="subtitle">
+                Pick a specialization and start your personalized learning journey with AI-guided recommendations.
+            </div>
+        </div>
+
+        <!-- Domains Grid -->
+        <div class="domains-grid">
+            <!-- Row 1 -->
+            <button class="domain-btn" onclick="selectDomain('Frontend')">
+                <span class="domain-btn-text">Frontend</span>
+                <span class="domain-btn-icon">💻</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Backend')">
+                <span class="domain-btn-text">Backend</span>
+                <span class="domain-btn-icon">⚙️</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Full Stack')">
+                <span class="domain-btn-text">Full Stack</span>
+                <span class="domain-btn-icon">🔗</span>
+            </button>
+
+            <!-- Row 2 -->
+            <button class="domain-btn" onclick="selectDomain('DevOps')">
+                <span class="domain-btn-text">DevOps</span>
+                <span class="domain-btn-icon">🚀</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('DevSecOps')">
+                <span class="domain-btn-text">DevSecOps</span>
+                <span class="domain-btn-icon">🔐</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Data Analyst')">
+                <span class="domain-btn-text">Data Analyst</span>
+                <span class="domain-btn-icon">📊</span>
+            </button>
+
+            <!-- Row 3 -->
+            <button class="domain-btn" onclick="selectDomain('AI Engineer')">
+                <span class="domain-btn-text">AI Engineer</span>
+                <span class="domain-btn-icon">🤖</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Machine Learning')">
+                <span class="domain-btn-text">Machine Learning</span>
+                <span class="domain-btn-icon">🧠</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Data Engineer')">
+                <span class="domain-btn-text">Data Engineer</span>
+                <span class="domain-btn-icon">⚡</span>
+            </button>
+
+            <!-- Row 4 -->
+            <button class="domain-btn" onclick="selectDomain('Android')">
+                <span class="domain-btn-text">Android</span>
+                <span class="domain-btn-icon">📱</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('iOS')">
+                <span class="domain-btn-text">iOS</span>
+                <span class="domain-btn-icon">🍎</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Blockchain')">
+                <span class="domain-btn-text">Blockchain</span>
+                <span class="domain-btn-icon">⛓️</span>
+            </button>
+
+            <!-- Row 5 -->
+            <button class="domain-btn" onclick="selectDomain('PostgreSQL')">
+                <span class="domain-btn-text">PostgreSQL</span>
+                <span class="domain-btn-icon">🗄️</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('QA')">
+                <span class="domain-btn-text">QA</span>
+                <span class="domain-btn-icon">✅</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Software Architect')">
+                <span class="domain-btn-text">Software Architect</span>
+                <span class="domain-btn-icon">🏗️</span>
+            </button>
+
+            <!-- Row 6 -->
+            <button class="domain-btn" onclick="selectDomain('Cyber Security')">
+                <span class="domain-btn-text">Cyber Security</span>
+                <span class="domain-btn-icon">🛡️</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('UX Design')">
+                <span class="domain-btn-text">UX Design</span>
+                <span class="domain-btn-icon">🎨</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Technical Writer')">
+                <span class="domain-btn-text">Technical Writer</span>
+                <span class="domain-btn-icon">📝</span>
+            </button>
+
+            <!-- Row 7 -->
+            <button class="domain-btn" onclick="selectDomain('Game Developer')">
+                <span class="domain-btn-text">Game Developer</span>
+                <span class="domain-btn-icon">🎮</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Server Side Game Dev')">
+                <span class="domain-btn-text">Server Side Game Dev</span>
+                <span class="domain-btn-icon">🖥️</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('MLOps')">
+                <span class="domain-btn-text">MLOps</span>
+                <span class="domain-btn-icon">🔄</span>
+            </button>
+
+            <!-- Row 8 -->
+            <button class="domain-btn" onclick="selectDomain('Product Manager')">
+                <span class="domain-btn-text">Product Manager</span>
+                <span class="domain-btn-icon">📈</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Engineering Manager')">
+                <span class="domain-btn-text">Engineering Manager</span>
+                <span class="domain-btn-icon">👔</span>
+            </button>
+            <button class="domain-btn" onclick="selectDomain('Developer Relations')">
+                <span class="domain-btn-text">Developer Relations</span>
+                <span class="domain-btn-icon">🤝</span>
+            </button>
+
+            <!-- Row 9 -->
+            <button class="domain-btn" onclick="selectDomain('BI Analyst')">
+                <span class="domain-btn-text">BI Analyst</span>
+                <span class="domain-btn-icon">📉</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 VibeLearn. Select a domain to get started with your personalized learning path.</p>
+    </footer>
+
+    <script>
+        function selectDomain(domain) {
+            // Store selected domain in localStorage
+            localStorage.setItem('selectedDomain', domain);
+            
+            // Redirect to course content page with domain parameter
+            window.location.href = `course-content.html?domain=${encodeURIComponent(domain)}`;
+        }
+
+        // Stagger animations on load
+        window.addEventListener('load', () => {
+            const buttons = document.querySelectorAll('.domain-btn');
+            buttons.forEach((btn, idx) => {
+                btn.style.animationDelay = `${idx * 0.05}s`;
+            });
+        });
+    </script>
+</body>
+</html>
